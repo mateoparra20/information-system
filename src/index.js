@@ -7,7 +7,9 @@ const session = require('express-session');
 const mysqlStore = require('express-mysql-session');
 const passport = require('passport');
 
+//INITIALIZATIONS
 const server = express();
+require('./lib/passport');
 const { database } = require('./keys');
 
 // SETTINGS
@@ -33,8 +35,13 @@ server.use(session({
     store: new mysqlStore(database)
 }));
 server.use(flash());
+server.use(passport.initialize());
+server.use(passport.session());
+
+//GLOBAL VARIABLES
 server.use((req, res, next) => {
-    server.locals.success = req.flash('success')
+    server.locals.success = req.flash('success');
+    server.locals.user = req.user;
     next();
 });
 

@@ -25,6 +25,12 @@
                         <input type="text" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
                     </div>
                     <div class="form-group mt-3">
+                        <label for="password">
+                            <span class="fas fa-lock"></span> Contraseña
+                        </label>
+                        <input type="password" name="password" class="form-control" placeholder="Ingresa tu contraseña">
+                    </div>
+                    <div class="form-group mt-3">
                         <label for="birthday">
                             <span class="fas fa-calendar-alt"></span> Fecha de nacimiento
                         </label>
@@ -37,10 +43,19 @@
                         <input type="email" name="email" class="form-control" placeholder="Ingresa tu email">
                     </div>
                     <div class="form-group mt-3">
-                        <label for="password">
-                            <span class="fas fa-lock"></span> Contraseña
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Phone
                         </label>
-                        <input type="password" name="password" class="form-control" placeholder="Ingresa tu contraseña">
+                        <input type="tel" name="phone" class="form-control" placeholder="Ingresa tu número de celular">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="role">
+                            <span class="fas fa-id-card"></span> Seleccionar el tipo de usuario
+                            <select name="role">
+                                <option value="user">Usuario</option>
+                                <option value="analist">Analista</option>
+                            </select>
+                        </label>
                     </div>
                     <input type="submit" class="btn btn-dark btn-lg mt-5">
                 </form>

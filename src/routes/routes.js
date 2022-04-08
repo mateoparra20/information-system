@@ -10,6 +10,10 @@ router.get('/user-data', (req, res) => {
     res.render('user-data-view/user-data');
 });
 
+router.get('/analist-data', (req, res) => {
+    res.send('ANALIST DATA PAGE');
+});
+
 router.post('/user-data', (req, res) => {
     const { selectedDate } = req.body;
     const userSelectedDate = {
