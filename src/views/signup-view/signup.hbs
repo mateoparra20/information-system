@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="col-sm-6 mx-auto">
+        <div class="card mt-5 mb-5 border-dark" style="border-width: 10px; background-color: #e3f2fd;">
+            <div class="card-body">
+                <h1 class="text-center">
+                    <span class="fas fa-plus-circle"></span> Regístrate
+                </h1>
+                <form action="/signup" method="POST">
+                    <div class="form-group">
+                        <label for="name">
+                            <span class="fas fa-user-plus"></span> Nombre
+                        </label>
+                        <input type="text" name="name" class="form-control" placeholder="Ingresa tu nombre" autofocus>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="lastname">
+                            <span class="fas fa-user-plus"></span> Apellidos
+                        </label>
+                        <input type="text" name="lastname" class="form-control" placeholder="Ingresa tus apellidos">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="cedula">
+                            <span class="fas fa-id-card"></span> Cédula
+                        </label>
+                        <input type="text" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="birthday">
+                            <span class="fas fa-calendar-alt"></span> Fecha de nacimiento
+                        </label>
+                        <input type="date" name="birthday" class="form-control">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="email">
+                            <span class="fas fa-envelope"></span> Email
+                        </label>
+                        <input type="email" name="email" class="form-control" placeholder="Ingresa tu email">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="password">
+                            <span class="fas fa-lock"></span> Contraseña
+                        </label>
+                        <input type="password" name="password" class="form-control" placeholder="Ingresa tu contraseña">
+                    </div>
+                    <input type="submit" class="btn btn-dark btn-lg mt-5">
+                </form>
+
+                <hr>
+                <div class="text-center">
+                    <p>¿Ya tienes una cuenta? <a href="/login"> Ingresa </a></p>
+                    <p>Regresa al <a href="/"> Inicio</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
