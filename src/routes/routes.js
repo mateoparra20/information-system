@@ -1,4 +1,5 @@
 const express = require('express');
+const pool = require('../database');
 
 const router = express.Router();
 
@@ -10,8 +11,10 @@ router.get('/user-data', (req, res) => {
     res.render('user-data-view/user-data');
 });
 
-router.get('/analist-data', (req, res) => {
-    res.send('ANALIST DATA PAGE');
+router.get('/analist-data', async (req, res) => {
+    const role = 'user';
+    users = await pool.query('SELECT name, lastname FROM users WHERE role = "user";');
+    res.render('analist-data-view/analist-data', { users });
 });
 
 router.post('/user-data', (req, res) => {
