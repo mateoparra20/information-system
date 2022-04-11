@@ -1,18 +1,22 @@
 const express = require('express');
 const pool = require('../database');
+const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', isNotLoggedIn, (req, res) => {
     res.render('home-view/home')
 });
+router.get('/logout', (req, res) => {
+    req.logOut();
+    res.redirect('/')
+});
 
-router.get('/user-data', (req, res) => {
+router.get('/user-data', isLoggedIn, (req, res) => {
     res.render('user-data-view/user-data');
 });
 
-router.get('/analist-data', async (req, res) => {
-    const role = 'user';
+router.get('/analist-data', isLoggedIn, async (req, res) => {
     users = await pool.query('SELECT name, lastname FROM users WHERE role = "user";');
     res.render('analist-data-view/analist-data', { users });
 });

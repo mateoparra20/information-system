@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const pool = require('../database');
 const helpers = require('./helpers');
 
-// SIGNUP
+// Proceso de SIGNUP
 passport.use('local.signup', new LocalStrategy({
     usernameField: 'cedula',
     passwordField: 'password',
@@ -25,6 +25,29 @@ passport.use('local.signup', new LocalStrategy({
     newUser.id = result.insertId;
     return done(null, newUser);
 }));
+
+//Proceso de LOGIN
+passport.use('local.login', new LocalStrategy({
+    usernameField: 'cedula',
+    passwordField: 'password',
+    passReqToCallback: true
+}, async (req, cedula, password, done) => {
+    const rows = await pool.query('SELECT * FROM users WHERE cedula = ?', [cedula]);
+    if(rows.length > 0){
+        const user = rows[0];
+        const validPawd = await helpers.matchPassword(password, user.password);
+        if(validPawd){
+            done(null, user, req.flash('success', 'Bienvenido de nuevo ' + user.name + ' ' + user.lastname));
+        }
+        else {
+            done(null, false, req.flash('message', 'Contraseña invalida! Inténtalo de nuevo'));
+        }
+    }
+    else {
+        return done(null, false, req.flash('message', 'La cédula no existe! Por favor regístrate'));
+    }
+}));
+
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
