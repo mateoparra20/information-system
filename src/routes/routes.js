@@ -37,4 +37,13 @@ router.post('/user-data', (req, res) => {
     res.redirect('/user-data');
 });
 
+router.post('/analist-data', (req, res) => {
+    /**
+     * SELECCIONAR FECHA DE LA BASE DE DATOS
+     * Y MOSTRAR EL RESULTADO EN GOOGLE CHARTS
+     */
+
+    res.redirect('/analist-data');
+});
+
 module.exports = router
