@@ -9,7 +9,7 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true
 }, async (req, cedula, password, done) => {
-    const { email, name, lastname, birthday, phone, role } = req.body;
+    const { email, name, lastname, birthday, phone, role, gender } = req.body;
     const newUser = {
         cedula,
         password,
@@ -18,7 +18,8 @@ passport.use('local.signup', new LocalStrategy({
         lastname,
         birthday,
         phone,
-        role
+        role,
+        gender
     };
     newUser.password = await helpers.encryptPassword(password);
     const result = await pool.query('INSERT INTO users SET ?', [newUser]);
