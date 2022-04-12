@@ -8,7 +8,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/logout"><i class="fas fa-toggle-off"></i> Salir</a>
+                    <a class="nav-link active" aria-current="page" href="/anlist-data">Historial</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/analist-data">Datos Actuales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/logout">Salir <i class="fa fa-sign-out" aria-hidden="true"></i></a>
                 </li>
             </ul>
             </div>
@@ -19,33 +25,35 @@
     <div class="card text-center mt-2 border-dark" style="border-width: 10px; background-color: #e3f2fd;">
         <div class="card-body">
             <h1> <i class="fas fa-chart-line"></i> Análisis de Datos del Usuario </h1>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="calendar">
-                        <form action="/analist-data" method="POST">
-                            <div class="form-group">
-                                <h5 for="role"><span class="fas fa-user-plus"></span> Seleccionar un usuario </h5>
-                                <select name="role">
-                                    {{#each users}}
-                                        <option value="user">
-                                            {{name}} {{lastname}}
-                                        </option>
-                                    {{/each}}
-                                </select> 
-                            </div>
-                            <div class="form-group">
-                                <h5 for="selectedDate"><span class="fas fa-calendar-alt"></span> Seleccionar fecha para visualizar los datos</h5>
-                                <input type="date" name="selectedDate">   
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-success btn-block"> Save </button>
-                                </div>
-                            </div>   
-                        </form>
+            <hr>
+            <form action="/analist-data" method="POST">
+                <div class="form-group">
+                    <h5 for="role"><span class="fas fa-user-plus"></span> Seleccionar un Usuario </h5>
+                    <select name="role">
+                        {{#each users}}
+                            <option value="user">
+                                {{name}} {{lastname}}
+                            </option>
+                        {{/each}}
+                    </select> 
+                </div>
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 align-items-center">
+                            <h5 for="selectedStartDate"><span class="fas fa-calendar-alt"></span> Fecha Inicial </h5>
+                            <input type="datetime-local" name="selectedStartDate">  
+                        </div>
+                        <div class="col-md-4 align-items-center">
+                            <h5 for="selectedEndDate"><span class="fas fa-calendar-alt"></span> Fecha Final </h5>
+                            <input type="datetime-local" name="selectedEndDate">   
+                        </div>
+                        <div class="col-md-1 align-items-center">
+                            <button class="btn btn-success btn-block"> Save </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
