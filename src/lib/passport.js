@@ -14,6 +14,7 @@ passport.use('local.signup', new LocalStrategy({
     const roleId = await pool.query('SELECT role_id FROM roles WHERE role=?', [role]);
 
     const newUser = {
+        user_id: null,
         identification,
         password,
         email,
@@ -25,6 +26,7 @@ passport.use('local.signup', new LocalStrategy({
         gender
     };
     newUser.password = await helpers.encryptPassword(password);
+    await pool.query('SET @@auto_increment_increment=1');
     const result = await pool.query('INSERT INTO users SET ?', [newUser]);
     newUser.user_id = result.insertId;
     return done(null, newUser);

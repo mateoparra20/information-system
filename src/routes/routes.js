@@ -30,7 +30,7 @@ router.get('/analist-data', isLoggedIn, async (req, res) => {
         time_record: null
     };
 
-    for (let step = 0; step < 24; step++) {
+    for (let step = 0; step < 50; step++) {
         var u = Math.floor(Math.random() * users.length);
         var L = Math.floor(Math.random() * 3);
         var M = Math.floor(Math.random() * 100);
@@ -45,9 +45,8 @@ router.get('/analist-data', isLoggedIn, async (req, res) => {
         const result_sv_u = await pool.query('INSERT INTO vital_signs_users SET ?', [new_vs_u]);
         // setTimeout(() => {
         //     console.log("1 Segundo esperado")
-        //   }, 1000);
-        // new_vs_u.vs_user_id = result_sv_u.insertId;
-        console.log(result_sv_u);
+        //   }, 2000);
+        // console.log(result_sv_u);
     }
 
     res.render('analist-data-view/analist-data', { users });
