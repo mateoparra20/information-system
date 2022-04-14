@@ -58,3 +58,10 @@ CREATE TABLE  vital_signs_users  (
    CONSTRAINT fk_user_vsu FOREIGN KEY(user_id) REFERENCES users(user_id),
    CONSTRAINT fk_vs_vsu FOREIGN KEY(vs_id) REFERENCES vital_signs(vs_id)
 );
+
+insert into roles(role) values ('user');
+insert into roles(role) values ('analist') ;
+
+insert into vital_signs(vital_sign) values ('Frecuencia Cardíaca');
+insert into vital_signs(vital_sign) values ('Oximetría') ;
+insert into vital_signs(vital_sign) values ('Temperatura') ;
