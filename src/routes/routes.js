@@ -17,7 +17,7 @@ router.get('/user-data', isLoggedIn, (req, res) => {
 });
 
 router.get('/analist-data', isLoggedIn, async (req, res) => {
-    users = await pool.query('SELECT name, lastname FROM users WHERE role = "user";');
+    users = await pool.query('SELECT u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
     res.render('analist-data-view/analist-data', { users });
 });
 

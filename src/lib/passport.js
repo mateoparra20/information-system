@@ -12,7 +12,6 @@ passport.use('local.signup', new LocalStrategy({
     const { email, name, lastname, birthday, phone, role, gender } = req.body;
 
     const roleId = await pool.query('SELECT role_id FROM roles WHERE role=?', [role]);
-    console.log('ROLE ID', roleId[0].role_id);
 
     const newUser = {
         identification,
@@ -23,12 +22,11 @@ passport.use('local.signup', new LocalStrategy({
         birthday,
         phone,
         role_id: roleId[0].role_id,
-        //role,
         gender
     };
     newUser.password = await helpers.encryptPassword(password);
     const result = await pool.query('INSERT INTO users SET ?', [newUser]);
-    newUser.id = result.insertId;
+    newUser.user_id = result.insertId;
     return done(null, newUser);
 }));
 

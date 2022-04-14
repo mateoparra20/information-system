@@ -13,9 +13,7 @@ router.get('/signup', isNotLoggedIn, (req, res) => {
 });
 router.post('/signup', (req, res, next) => {
     const { role } = req.body;
-    // const roleSelected = {
-    //     role
-    // }
+
     if(role === 'user'){
         passport.authenticate('local.signup', {
             successRedirect: '/user-data',
@@ -40,8 +38,6 @@ router.get('/login', isNotLoggedIn, (req, res) => {
 });
 router.post('/login', async (req, res, next) => {
     const { identification } = req.body;
-
-    //const userRole = await pool.query('SELECT role FROM users WHERE cedula = ?', [cedula]);
     const userRole = await pool.query('SELECT r.role FROM roles r JOIN users u ON r.role_id = u.role_id WHERE u.identification=?',[identification]);
 
     if(userRole[0].role === 'user'){
