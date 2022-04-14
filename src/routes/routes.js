@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const pool = require('../database');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
@@ -20,7 +21,8 @@ router.get('/analist-data', isLoggedIn, async (req, res) => {
     const vitalSign = await pool.query('SELECT vital_sign FROM vital_signs');
     console.log(vitalSign[0]);
     const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
-    console.log(users)
+    console.log(users);
+    console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
     res.render('analist-data-view/analist-data', { users });
 });
 
