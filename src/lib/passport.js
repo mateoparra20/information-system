@@ -5,20 +5,25 @@ const helpers = require('./helpers');
 
 // Proceso de SIGNUP
 passport.use('local.signup', new LocalStrategy({
-    usernameField: 'cedula',
+    usernameField: 'identification',
     passwordField: 'password',
     passReqToCallback: true
-}, async (req, cedula, password, done) => {
+}, async (req, identification, password, done) => {
     const { email, name, lastname, birthday, phone, role, gender } = req.body;
+
+    const roleId = await pool.query('SELECT role_id FROM roles WHERE role=?', [role]);
+    console.log('ROLE ID', roleId[0].role_id);
+
     const newUser = {
-        cedula,
+        identification,
         password,
         email,
         name,
         lastname,
         birthday,
         phone,
-        role,
+        role_id: roleId[0].role_id,
+        //role,
         gender
     };
     newUser.password = await helpers.encryptPassword(password);
@@ -29,11 +34,11 @@ passport.use('local.signup', new LocalStrategy({
 
 //Proceso de LOGIN
 passport.use('local.login', new LocalStrategy({
-    usernameField: 'cedula',
+    usernameField: 'identification',
     passwordField: 'password',
     passReqToCallback: true
-}, async (req, cedula, password, done) => {
-    const rows = await pool.query('SELECT * FROM users WHERE cedula = ?', [cedula]);
+}, async (req, identification, password, done) => {
+    const rows = await pool.query('SELECT * FROM users WHERE identification = ?', [identification]);
     if(rows.length > 0){
         const user = rows[0];
         const validPawd = await helpers.matchPassword(password, user.password);
@@ -51,9 +56,9 @@ passport.use('local.login', new LocalStrategy({
 
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.user_id);
 });
 passport.deserializeUser(async (id, done) => {
-    const rows = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    const rows = await pool.query('SELECT * FROM users WHERE user_id = ?', [id]);
     done(null, rows[0]);
 });
