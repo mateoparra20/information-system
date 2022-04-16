@@ -66,16 +66,17 @@
 </div>
 <script>
     let measureArray = [];
-    let labelChart = [];
+    let labelChart = {};
+    let labelsTag = [];
 
     {{#each measure}}
         measureArray.push({{measure}})
-        {{!-- labelChart.push({{vital_sign}}.toString()) --}}
-        console.log(typeof({{vital_sign}}))
+        labelChart = "{{vital_sign}}"
+        labelsTag.push("{{time_record}}")
     {{/each}}
 
-
     console.log(labelChart);
+    console.log();
     const labels = [
         'January',
         'February',

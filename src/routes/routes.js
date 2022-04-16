@@ -26,9 +26,7 @@ router.get('/analist-data', isLoggedIn, async (req, res) => {
     console.log(vitalSign[0]);
     const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
     const measure = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-14 15:58:08" AND vs.vs_id=1');
-    //console.log(users);
-    console.log(measure);
-
+    console.log(measure[0].time_record)
     res.render('analist-data-view/analist-data', { users, measure });
 });
 
