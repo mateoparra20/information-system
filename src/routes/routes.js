@@ -1,9 +1,12 @@
 const express = require('express');
+const { Chart } = require('chart.js');
+const { Handlebars } = require('handlebars')
 const moment = require('moment');
 const pool = require('../database');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
 const router = express.Router();
+
 
 router.get('/', isNotLoggedIn, (req, res) => {
     res.render('home-view/home')
@@ -21,7 +24,47 @@ router.get('/analist-data', isLoggedIn, async (req, res) => {
     const vitalSign = await pool.query('SELECT vs_id FROM vital_signs');
     console.log(vitalSign[0]);
     const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
-    res.render('analist-data-view/analist-data', { users });
+    const measure = await pool.query('SELECT measure, time_record FROM vital_signs_users WHERE time_record <= "2022-04-14 15:58:08" AND vs_id=1');
+    //console.log(users);
+    //console.log(measure);
+    //var ctx = document.getElementById('myChart').innerText; // node
+    // var ctx = document.getElementById('myChart').getContext('2d'); // 2d context
+
+    // var ctx = 'myChart'; // element id
+
+    const ctx = Handlebars.compile(document.getElementById('myChart').innerHTML);
+    console.log(ctx);
+    const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+    ];
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'My First dataset',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
+    const myChart = new Chart(
+        //ctx,
+        config
+    );
+
+    res.render('analist-data-view/analist-data', { users, myChart });
 });
 
 router.post('/user-data', (req, res) => {
