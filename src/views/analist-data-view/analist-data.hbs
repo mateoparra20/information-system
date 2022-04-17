@@ -11,7 +11,7 @@
                     <a class="nav-link active" aria-current="page" href="/analist-data">Historial</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/analist-data">Datos Actual</a>
+                    <a class="nav-link active" aria-current="page" href="/analist-data">Datos Actuales</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/logout">Salir <i class="fa fa-sign-out" aria-hidden="true"></i></a>
@@ -55,11 +55,15 @@
                 </div>
             </form>
             <div>
-                <canvas id="myChart"></canvas>
+                <canvas id="ChartFrec"></canvas>
             </div>
             <hr>
             <div>
-                {{!-- <canvas id="myChart1"></canvas> --}}
+                <canvas id="ChartTemp"></canvas>
+            </div>
+            <hr>
+            <div>
+                <canvas id="ChartOxi"></canvas>
             </div>
         </div>
     </div>
@@ -68,26 +72,27 @@
     let measureArray = [];
     let labelChart = {};
     let labelsTag = [];
+    let labelsTagStr = [];
 
-    {{#each measure}}
+    {{#each measureFrecuencia}}
         measureArray.push({{measure}})
         labelChart = "{{vital_sign}}"
         labelsTag.push("{{time_record}}")
     {{/each}}
 
-    console.log(labelChart);
-    console.log();
-    const labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-    ];
+
+    function convert(str) {
+        var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+    }
+    for(let i=0; i < labelsTag.length; i++) {
+        labelsTagStr.push(convert(labelsTag[i]));
+    }
 
     const data = {
-        labels: labels,
+        labels: labelsTagStr,
         datasets: [{
             label: labelChart,
             backgroundColor: 'rgb(255, 99, 132)',
@@ -103,27 +108,40 @@
     };
 
     const myChart = new Chart(
-        document.getElementById('myChart'),
+        document.getElementById('ChartFrec'),
         config
     );
 </script>
 <script>
-    const labels1 = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-    ];
+    let measureArray1 = [];
+    let labelChart1 = {};
+    let labelsTag1 = [];
+    let labelsTagStr1 = [];
+
+    {{#each measureTemperatura}}
+        measureArray1.push({{measure}})
+        labelChart1 = "{{vital_sign}}"
+        labelsTag1.push("{{time_record}}")
+    {{/each}}
+
+
+    function convert(str) {
+        var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+    }
+    for(let i=0; i < labelsTag1.length; i++) {
+        labelsTagStr1.push(convert(labelsTag1[i]));
+    }
 
     const data1 = {
-        labels: labels1,
+        labels: labelsTagStr1,
         datasets: [{
-            label: 'My Second dataset',
-            backgroundColor: 'rgb(99, 143, 255)',
-            borderColor: 'rgb(99, 143, 255)',
-            data: [0, 30, 55, 25, 20, 33, 65],
+            label: labelChart1,
+            backgroundColor: 'rgb(35, 252, 125)',
+            borderColor: 'rgb(35, 252, 125)',
+            data: measureArray1,
         }]
     };
 
@@ -134,7 +152,51 @@
     };
 
     const myChart1 = new Chart(
-        document.getElementById('myChart1'),
+        document.getElementById('ChartTemp'),
         config1
+    );
+</script>
+<script>
+     let measureArray2 = [];
+    let labelChart2 = {};
+    let labelsTag2 = [];
+    let labelsTagStr2 = [];
+
+    {{#each measureOxigenacion}}
+        measureArray2.push({{measure}})
+        labelChart2 = "{{vital_sign}}"
+        labelsTag2.push("{{time_record}}")
+    {{/each}}
+
+
+    function convert(str) {
+        var date = new Date(str),
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+    }
+    for(let i=0; i < labelsTag2.length; i++) {
+        labelsTagStr2.push(convert(labelsTag2[i]));
+    }
+
+    const data2 = {
+        labels: labelsTagStr2,
+        datasets: [{
+            label: labelChart2,
+            backgroundColor: 'rgb(86, 35, 252)',
+            borderColor: 'rgb(86, 35, 252)',
+            data: measureArray2,
+        }]
+    };
+
+    const config2 = {
+        type: 'line',
+        data: data2,
+        options: {}
+    };
+
+    const myChart2 = new Chart(
+        document.getElementById('ChartOxi'),
+        config2
     );
 </script>

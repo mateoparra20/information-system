@@ -1,10 +1,7 @@
 const express = require('express');
-const { Chart } = require('chart.js');
-const Handlebars = require('handlebars')
 const moment = require('moment');
 const pool = require('../database');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
-const helpers = require('../lib/handlebars')
 
 const router = express.Router();
 
@@ -23,11 +20,13 @@ router.get('/user-data', isLoggedIn, (req, res) => {
 
 router.get('/analist-data', isLoggedIn, async (req, res) => {
     const vitalSign = await pool.query('SELECT vs_id FROM vital_signs');
-    console.log(vitalSign[0]);
+
     const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
-    const measure = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-14 15:58:08" AND vs.vs_id=1');
-    console.log(measure[0].time_record)
-    res.render('analist-data-view/analist-data', { users, measure });
+    const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=1');
+    const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=3');
+    const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=2');
+
+    res.render('analist-data-view/analist-data', { users, measureFrecuencia, measureTemperatura, measureOxigenacion });
 });
 
 router.post('/user-data', (req, res) => {
@@ -51,6 +50,7 @@ router.post('/analist-data', (req, res) => {
      * SELECCIONAR FECHA DE LA BASE DE DATOS
      * Y MOSTRAR EL RESULTADO EN GOOGLE CHARTS
      */
+    console.log(req.body);
 
     res.redirect('/analist-data');
 });
