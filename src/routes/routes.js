@@ -14,45 +14,56 @@ router.get('/logout', (req, res) => {
     res.redirect('/')
 });
 
+router.get('/analist-data', isLoggedIn, async (req, res) => {
+    // const vitalSign = await pool.query('SELECT vs_id FROM vital_signs');
+    // var context=req.session.context;
+    // console.log(context);
+    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+    // const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=1');
+    // const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=3');
+    // const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=2');
+    // , measureFrecuencia, measureTemperatura, measureOxigenacion
+    res.render('analist-data-view/analist-data', { users });
+});
+router.post('/analist-data', (req, res) => {
+    req.session.context = req.body;
+
+    res.redirect('/analist-data-chart');
+});
+router.get('/analist-data-chart', async (req, res) => {
+    var context=req.session.context;
+
+    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+
+    const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=1 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.role]);
+    const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=3 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.role]);
+    const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=2 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.role]);
+    let startdate = context.selectedStartDate;
+    let enddate =  context.selectedEndDate;
+    let userask = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u WHERE u.identification = ?' , [context.role]);
+    let userask_consult =  userask[0].identification+'-'+userask[0].name+' '+userask[0].lastname;
+    
+    res.render('analist-data-history-view/history-data', { users, measureFrecuencia, measureTemperatura, measureOxigenacion, startdate , enddate , userask_consult});
+});
+
+
 router.get('/user-data', isLoggedIn, (req, res) => {
     res.render('user-data-view/user-data');
 });
-
-router.get('/analist-data', isLoggedIn, async (req, res) => {
-    const vitalSign = await pool.query('SELECT vs_id FROM vital_signs');
-
-    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
-    const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=1');
-    const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=3');
-    const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id WHERE vs.time_record <= "2022-04-16 19:42:23" AND vs.vs_id=2');
-
-    res.render('analist-data-view/analist-data', { users, measureFrecuencia, measureTemperatura, measureOxigenacion });
-});
-
 router.post('/user-data', (req, res) => {
-    const { selectedDate } = req.body;
-    const userSelectedDate = {
-        selectedDate,
-    }
-    console.log('selected date', userSelectedDate);
-    /**
-     * SELECCIONAR FECHA DE LA BASE DE DATOS
-     * Y MOSTRAR EL RESULTADO EN GOOGLE CHARTS
-     */
-    if(userSelectedDate.selectedDate === '2022-04-04'){
-        req.flash('success', 'Listones');
-    }
-    res.redirect('/user-data');
+    req.session.context = req.body;
+    res.redirect('/user-data-chart');
 });
+router.get('/user-data-chart', async(req,res) => {
+    var context = req.session.context;
+    console.log(context);
 
-router.post('/analist-data', (req, res) => {
-    /**
-     * SELECCIONAR FECHA DE LA BASE DE DATOS
-     * Y MOSTRAR EL RESULTADO EN GOOGLE CHARTS
-     */
-    console.log(req.body);
-
-    res.redirect('/analist-data');
+    const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=1 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.identification]);
+    const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=3 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.identification]);
+    const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.time_record >= ? AND vs.time_record <= ? AND vs.vs_id=2 AND u.identification = ? ', [context.selectedStartDate, context.selectedEndDate, context.identification]);
+    let startdate = context.selectedStartDate;
+    let enddate =  context.selectedEndDate;
+    res.render('user-data-history-view/history-data', {measureFrecuencia, measureOxigenacion, measureTemperatura, startdate, enddate})
 });
 
 module.exports = router
