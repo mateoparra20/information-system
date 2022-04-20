@@ -49,6 +49,7 @@ server.use((req, res, next) => {
 // RUTAS
 server.use(require('./routes/routes'));
 server.use(require('./routes/authentication'));
+server.use(require('./routes/vital-signal'))
 
 //PUBLIC
 server.use(express.static(path.join(__dirname, 'public')))

@@ -66,6 +66,8 @@ router.get('/user-data-chart', async(req,res) => {
     res.render('user-data-history-view/history-data', {measureFrecuencia, measureOxigenacion, measureTemperatura, startdate, enddate})
 });
 
+
+
 module.exports = router
 
 
