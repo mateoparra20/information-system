@@ -1,11 +1,13 @@
 const express = require('express');
+const model = require('../lib/vital-signal-db');
 
 const router = express.Router();
 
-let informationData;
-
 router.get('/information-data', (req, res) => {
-    res.send('Hola')
+
+    model.registrar(req.query)
+
+    res.send(req.query)
 });
 
 
