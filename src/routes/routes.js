@@ -7,6 +7,8 @@ const router = express.Router();
 
 
 router.get('/', isNotLoggedIn, (req, res) => {
+    moment.locale('de')
+    console.log(moment().format('YYYY-MM-DD HH:mm:ss:SSS'))
     res.render('home-view/home')
 });
 router.get('/logout', (req, res) => {
