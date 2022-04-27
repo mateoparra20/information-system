@@ -73,8 +73,28 @@ router.get('/analist-data-stream-chart', async (req, res) => {
         res.render('analist-data-view/analist-data-stream', { users })
     }
 });
+router.get('/analist-data-alert', isLoggedIn, async(req, res) => {
+    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+    res.render('analist-data-view/analist-data-alerts', { users });
+});
+router.post('/analist-data-alert', (req, res) => {
+    req.session.context = req.body;
+    res.redirect('/analist-data-alert-table');
+});
+router.get('/analist-data-alert-table', async(req,res) => {
+    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+    var context = req.session.context;
+    console.log(context);
+    let alert = await pool.query('SELECT vs.vital_sign, a.description, ah.time_record FROM alert_history ah JOIN anomalies a ON a.anomaly_id = ah.anomaly_id JOIN vital_signs vs ON vs.vs_id = a.vs_id JOIN users u ON u.user_id = ah.user_id WHERE u.identification = ? ORDER BY ah.time_record ', [context.role])
+    console.log(alert)
+    res.render('analist-data-alert-view/alert-data', {users, alert})
+});
 
-
+/**
+ * =======================================================================
+ *                     USER DATA
+ * =======================================================================
+ */
 router.get('/user-data', isLoggedIn, (req, res) => {
     res.render('user-data-view/user-data');
 });
@@ -109,6 +129,21 @@ router.get('/user-data-stream-chart', async(req,res) => {
     const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=3 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.identification, parseInt(context.timestamp)]);
     const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=2 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.identification, parseInt(context.timestamp)]);
     res.render('user-data-stream-view/stream-data', {measureFrecuencia, measureOxigenacion, measureTemperatura})
+});
+
+router.get('/user-data-alert', isLoggedIn, (req, res) => {
+    res.render('user-data-view/user-data-alerts');
+});
+router.post('/user-data-alert', (req, res) => {
+    req.session.context = req.body;
+    res.redirect('/user-data-alert-table');
+});
+router.get('/user-data-alert-table', async(req,res) => {
+    var context = req.session.context;
+    console.log(context);
+    let alert = await pool.query('SELECT vs.vital_sign, a.description, ah.time_record FROM alert_history ah JOIN anomalies a ON a.anomaly_id = ah.anomaly_id JOIN vital_signs vs ON vs.vs_id = a.vs_id JOIN users u ON u.user_id = ah.user_id WHERE u.identification = ? ORDER BY ah.time_record ', [context.identification])
+    console.log(alert)
+    res.render('user-data-alert-view/alert-data', {alert})
 });
 
 

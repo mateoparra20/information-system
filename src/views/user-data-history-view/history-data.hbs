@@ -17,6 +17,9 @@
                         <a class="nav-link active" aria-current="page" href="/user-data-stream">Datos Actuales</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/user-data-alert">Historial de Alertas</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/logout"> Salir <i class="fa fa-sign-out"
                                 aria-hidden="true"></i></a>
                     </li>
@@ -72,129 +75,135 @@
     let labelsTag = [];
     let labelsTagStr = [];
 
-    {{#each measureFrecuencia}}
-        measureArray.push({{ measure }})
-        labelChart = "{{vital_sign}}"
-        labelsTag.push("{{time_record}}")
-    {{/each}}
+    { { #each measureFrecuencia } }
+    measureArray.push({{ measure }})
+    labelChart = "{{vital_sign}}"
+    labelsTag.push("{{time_record}}")
+    {
+        {
+            /each}}
 
 
-    function convert(str) {
-        var date = new Date(str),
-            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-            day = ("0" + date.getDate()).slice(-2);
-        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
-    }
-    for (let i = 0; i < labelsTag.length; i++) {
-        labelsTagStr.push(convert(labelsTag[i]));
-    }
+            function convert(str) {
+                var date = new Date(str),
+                    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                    day = ("0" + date.getDate()).slice(-2);
+                return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+            }
+            for (let i = 0; i < labelsTag.length; i++) {
+                labelsTagStr.push(convert(labelsTag[i]));
+            }
 
-    const data = {
-        labels: labelsTagStr,
-        datasets: [{
-            label: labelChart,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: measureArray,
-        }]
-    };
+            const data = {
+                labels: labelsTagStr,
+                datasets: [{
+                    label: labelChart,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: measureArray,
+                }]
+            };
 
-    const config = {
-        type: 'line',
-        data: data,
-        options: {}
-    };
+            const config = {
+                type: 'line',
+                data: data,
+                options: {}
+            };
 
-    const myChart = new Chart(
-        document.getElementById('ChartFrec'),
-        config
-    );
+            const myChart = new Chart(
+                document.getElementById('ChartFrec'),
+                config
+            );
 </script>
 <script>
-    let measureArray1 = [];
-    let labelChart1 = {};
-    let labelsTag1 = [];
-    let labelsTagStr1 = [];
+        let measureArray1 = [];
+        let labelChart1 = {};
+        let labelsTag1 = [];
+        let labelsTagStr1 = [];
 
-    {{#each measureTemperatura}}
+        { { #each measureTemperatura } }
         measureArray1.push({{ measure }})
         labelChart1 = "{{vital_sign}}"
         labelsTag1.push("{{time_record}}")
-    {{/each}}
+        {
+            {
+                /each}}
 
 
-    function convert(str) {
-        var date = new Date(str),
-            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-            day = ("0" + date.getDate()).slice(-2);
-        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
-    }
-    for (let i = 0; i < labelsTag1.length; i++) {
-        labelsTagStr1.push(convert(labelsTag1[i]));
-    }
+                function convert(str) {
+                    var date = new Date(str),
+                        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                        day = ("0" + date.getDate()).slice(-2);
+                    return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+                }
+                for (let i = 0; i < labelsTag1.length; i++) {
+                    labelsTagStr1.push(convert(labelsTag1[i]));
+                }
 
-    const data1 = {
-        labels: labelsTagStr1,
-        datasets: [{
-            label: labelChart1,
-            backgroundColor: 'rgb(35, 252, 125)',
-            borderColor: 'rgb(35, 252, 125)',
-            data: measureArray1,
-        }]
-    };
+                const data1 = {
+                    labels: labelsTagStr1,
+                    datasets: [{
+                        label: labelChart1,
+                        backgroundColor: 'rgb(35, 252, 125)',
+                        borderColor: 'rgb(35, 252, 125)',
+                        data: measureArray1,
+                    }]
+                };
 
-    const config1 = {
-        type: 'line',
-        data: data1,
-        options: {}
-    };
+                const config1 = {
+                    type: 'line',
+                    data: data1,
+                    options: {}
+                };
 
-    const myChart1 = new Chart(
-        document.getElementById('ChartTemp'),
-        config1
-    );
+                const myChart1 = new Chart(
+                    document.getElementById('ChartTemp'),
+                    config1
+                );
 </script>
 <script>
-    let measureArray2 = [];
-    let labelChart2 = {};
-    let labelsTag2 = [];
-    let labelsTagStr2 = [];
+            let measureArray2 = [];
+            let labelChart2 = {};
+            let labelsTag2 = [];
+            let labelsTagStr2 = [];
 
-    {{#each measureOxigenacion}}
-                measureArray2.push({{ measure }})
+            { { #each measureOxigenacion } }
+            measureArray2.push({{ measure }})
             labelChart2 = "{{vital_sign}}"
             labelsTag2.push("{{time_record}}")
-    {{/each}}
+            {
+                {
+                    /each}}
 
 
-    function convert(str) {
-        var date = new Date(str),
-            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-            day = ("0" + date.getDate()).slice(-2);
-        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
-    }
-    for (let i = 0; i < labelsTag2.length; i++) {
-        labelsTagStr2.push(convert(labelsTag2[i]));
-    }
+                    function convert(str) {
+                        var date = new Date(str),
+                            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                            day = ("0" + date.getDate()).slice(-2);
+                        return [date.getFullYear() + '-' + mnth + '-' + day + '\n' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()].toString()
+                    }
+                    for (let i = 0; i < labelsTag2.length; i++) {
+                        labelsTagStr2.push(convert(labelsTag2[i]));
+                    }
 
-    const data2 = {
-        labels: labelsTagStr2,
-        datasets: [{
-            label: labelChart2,
-            backgroundColor: 'rgb(86, 35, 252)',
-            borderColor: 'rgb(86, 35, 252)',
-            data: measureArray2,
-        }]
-    };
+                    const data2 = {
+                        labels: labelsTagStr2,
+                        datasets: [{
+                            label: labelChart2,
+                            backgroundColor: 'rgb(86, 35, 252)',
+                            borderColor: 'rgb(86, 35, 252)',
+                            data: measureArray2,
+                        }]
+                    };
 
-    const config2 = {
-        type: 'line',
-        data: data2,
-        options: {}
-    };
+                    const config2 = {
+                        type: 'line',
+                        data: data2,
+                        options: {}
+                    };
 
-    const myChart2 = new Chart(
-        document.getElementById('ChartOxi'),
-        config2
-    );
+                    const myChart2 = new Chart(
+                        document.getElementById('ChartOxi'),
+                        config2
+                    );
 </script>
