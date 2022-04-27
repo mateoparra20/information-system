@@ -39,7 +39,7 @@ router.get('/login', isNotLoggedIn, (req, res) => {
 router.post('/login', async (req, res, next) => {
     const { identification } = req.body;
     const userRole = await pool.query('SELECT r.role FROM roles r JOIN users u ON r.role_id = u.role_id WHERE u.identification=?',[identification]);
-
+    console.log('user role', userRole[0])
     if(userRole[0].role === 'user'){
         passport.authenticate('local.login', {
             successRedirect: '/user-data',
