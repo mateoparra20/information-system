@@ -16,6 +16,9 @@ router.get('/logout', (req, res) => {
     res.redirect('/')
 });
 
+/**
+ * Vista inicial del rol analista, inicia en la pestaña historial por default
+ */
 router.get('/analist-data', isLoggedIn, async (req, res) => {
     const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
     res.render('analist-data-view/analist-data', { users });
@@ -39,11 +42,36 @@ router.get('/analist-data-chart', async (req, res) => {
         res.render('analist-data-history-view/history-data', { users, measureFrecuencia, measureTemperatura, measureOxigenacion, startdate , enddate });
     }else{
         const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
-
         res.render('analist-data-view/analist-data', { users })
     }
+});
+/**
+ * Vista de la ruta para ver datos en vivo
+ */
+router.get('/analist-data-stream', isLoggedIn, async (req, res) => {
+    const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+    res.render('analist-data-view/analist-data-stream', { users });
+});
+router.post('/analist-data-stream', (req, res) => {
+    req.session.context = req.body;
 
-    
+    res.redirect('/analist-data-stream-chart');
+});
+router.get('/analist-data-stream-chart', async (req, res) => {
+    var context=req.session.context;
+    console.log(context);
+    console.log(typeof context.timestamp);
+    if(context.role !== '0'){
+        const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+
+        const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=1 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.role, parseInt(context.timestamp)]);
+        const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=3 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.role, parseInt(context.timestamp)]);
+        const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=2 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.role, parseInt(context.timestamp)]);
+        res.render('analist-data-stream-view/stream-data', { users, measureFrecuencia, measureTemperatura, measureOxigenacion });
+    }else{
+        const users = await pool.query('SELECT u.user_id, u.identification, u.name, u.lastname FROM users u JOIN roles r ON u.role_id = r.role_id WHERE r.role = "user";');
+        res.render('analist-data-view/analist-data-stream', { users })
+    }
 });
 
 
@@ -64,6 +92,23 @@ router.get('/user-data-chart', async(req,res) => {
     let startdate = context.selectedStartDate;
     let enddate =  context.selectedEndDate;
     res.render('user-data-history-view/history-data', {measureFrecuencia, measureOxigenacion, measureTemperatura, startdate, enddate})
+});
+
+router.get('/user-data-stream', isLoggedIn, (req, res) => {
+    res.render('user-data-view/user-data-stream');
+});
+router.post('/user-data-stream', (req, res) => {
+    req.session.context = req.body;
+    res.redirect('/user-data-stream-chart');
+});
+router.get('/user-data-stream-chart', async(req,res) => {
+    var context = req.session.context;
+    console.log(context);
+
+    const measureFrecuencia = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=1 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.identification, parseInt(context.timestamp)]);
+    const measureTemperatura = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=3 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.identification, parseInt(context.timestamp)]);
+    const measureOxigenacion = await pool.query('SELECT vs.measure, vs.time_record, v.vital_sign FROM vital_signs_users vs JOIN vital_signs v ON vs.vs_id = v.vs_id JOIN users u ON vs.user_id = u.user_id WHERE vs.vs_id=2 AND u.identification = ? order by vs.vs_user_id desc limit ? ', [context.identification, parseInt(context.timestamp)]);
+    res.render('user-data-stream-view/stream-data', {measureFrecuencia, measureOxigenacion, measureTemperatura})
 });
 
 
