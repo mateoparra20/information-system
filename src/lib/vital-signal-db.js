@@ -1,5 +1,5 @@
 require('dotenv');
-const client = require('twilio')("AC24d6cbd97e4536d4b5b1e797752ff69c", "501195b094519e04625db6eb422861c4");
+const client = require('twilio')("AC24d6cbd97e4536d4b5b1e797752ff69c", "848e9343dde7d345f47954f6cc96b78b");
 
 const pool = require('../database');
 const moment = require('moment');
@@ -32,13 +32,14 @@ const vitalSignalDb = {
             let user = await pool.query('SELECT phone, name FROM users WHERE user_id = ?', [modelSignalDb.user_id]);
 
             analist.forEach(element => {
+                console.log('celular analistas', element.phone)
                 client.messages.create({
                     from: 'whatsapp:+14155238886',
                     body: 'Hola analista ' + element.name +', según nuestro reporte, el usuario ' + user[0].name + ' presenta la anomalía '+ anomaliesQuery[0].description +' según sus signos vitales, ponte en contacto con el usuario inmediatamente',
                     to: 'whatsapp:+57' + element.phone,
                 }).then(message => console.log(message.sid));
             });
-            
+            console.log('celular usuario', user[0].phone);
             client.messages.create({
                 from: 'whatsapp:+14155238886',
                 body: 'Hola usuario ' + user[0].name + ', según nuestro reporte, presentas la anomalía '+ anomaliesQuery[0].description +' según tus signos vitales, ponte en contacto con cualquier analista inmediatamente',
